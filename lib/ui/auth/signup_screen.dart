@@ -27,6 +27,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
     passwordController.dispose();
   }
 
+  void signUp(){
+    setState(() {
+                    loading = true;
+                  });
+                  _auth
+                      .createUserWithEmailAndPassword(
+                          email: emailController.text.toString(),
+                          password: passwordController.text.toString())
+                      .then((value) {
+                    setState(() {
+                      loading = false;
+                    });
+                  }).onError((error, stackTrace) {
+                    Utils().toastMessage(error.toString());
+                    setState(() {
+                      loading = false;
+                    });
+                  });
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -95,23 +115,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               loading: loading,
               onTap: () {
                 if (_formKey.currentState!.validate()) {
-                  setState(() {
-                    loading = true;
-                  });
-                  _auth
-                      .createUserWithEmailAndPassword(
-                          email: emailController.text.toString(),
-                          password: passwordController.text.toString())
-                      .then((value) {
-                    setState(() {
-                      loading = false;
-                    });
-                  }).onError((error, stackTrace) {
-                    Utils().toastMessage(error.toString());
-                    setState(() {
-                      loading = false;
-                    });
-                  });
+                  signUp();
                 }
               },
             )
