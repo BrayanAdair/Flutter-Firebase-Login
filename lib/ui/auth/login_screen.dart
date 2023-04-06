@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:login/ui/auth/login_with_phone.dart';
 import 'package:login/ui/auth/posts/post_screen.dart';
 import 'package:login/ui/auth/signup_screen.dart';
 import 'package:login/utils/utils.dart';
@@ -14,6 +15,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool loading = false;
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -26,6 +28,9 @@ class _LoginScreenState extends State<LoginScreen> {
     passwordController.dispose();
   }
   void login(){
+    setState((){
+      loading = true;
+    });
     _auth
     .signInWithEmailAndPassword(
       email: emailController.text,
@@ -98,17 +103,38 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                             child: Text('Registrarse'))
                       ],
-                    )
+                    ),
+                      
                   ],
                 )),
             RoundButton(
               title: 'Login',
+              loading: loading,
               onTap: () {
                 if (_formKey.currentState!.validate()) {
                   login();
                 }
               },
-            )
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            InkWell(
+              onTap: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginWithPhoneNumber()));
+              },
+            
+            child: Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: Colors.orange.shade900)),
+                          child: Center(child: Text("Inicia con un Telefono")),
+                      ),
+            ),
           ],
         ),
       ),
